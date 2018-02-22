@@ -149,12 +149,11 @@ class SnsTopicManager(object):
                  subscriptions,
                  purge_subscriptions,
                  check_mode,
-                 region,
+                 client,
                  **aws_connect_params):
 
-        self.region = region
         self.aws_connect_params = aws_connect_params
-        self.connection = self._get_boto_connection()
+        self.connection = client
         self.changed = False
         self.module = module
         self.name = name
@@ -172,13 +171,6 @@ class SnsTopicManager(object):
         self.topic_deleted = False
         self.arn_topic = None
         self.attributes_set = []
-
-    def _get_boto_connection(self):
-        try:
-            return connect_to_aws(boto.sns, self.region,
-                                  **self.aws_connect_params)
-        except BotoServerError as err:
-            self.module.fail_json(msg=err.message)
 
     def _get_all_topics(self):
         next_token = None
@@ -378,7 +370,7 @@ def main():
                                 subscriptions,
                                 purge_subscriptions,
                                 check_mode,
-                                region,
+                                client,
                                 **aws_connect_params)
 
     if state == 'present':
