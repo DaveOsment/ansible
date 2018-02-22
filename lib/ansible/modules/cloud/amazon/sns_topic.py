@@ -126,14 +126,14 @@ import re
 import time
 
 try:
-    import boto.sns
-    from boto.exception import BotoServerError
-    HAS_BOTO = True
+    import botocore
+    from botocore.exceptions import ClientError
+    HAS_BOTOCORE = True
 except ImportError:
-    HAS_BOTO = False
+    HAS_BOTOCORE = False
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.ec2 import connect_to_aws, ec2_argument_spec, get_aws_connection_info
+from ansible.module_utils.ec2 import connect_to_aws, ec2_argument_spec, get_aws_connection_info, boto3_conn
 
 
 class SnsTopicManager(object):
