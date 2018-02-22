@@ -211,8 +211,9 @@ class SnsTopicManager(object):
             self.changed = True
             self.attributes_set.append('display_name')
             if not self.check_mode:
-                self.connection.set_topic_attributes(self.arn_topic, 'DisplayName',
-                                                     self.display_name)
+                self.connection.set_topic_attributes(TopicArn=self.arn_topic,
+                                                     AttributeName='DisplayName',
+                                                     AttributeValue=self.display_name)
 
         if self.policy and self.policy != json.loads(topic_attributes['Policy']):
             self.changed = True
