@@ -173,15 +173,15 @@ class SnsTopicManager(object):
         self.attributes_set = []
 
     def _get_all_topics(self):
-        next_token = None
+        next_token = ''
         topics = []
         while True:
             try:
-                response = self.connection.get_all_topics(next_token)
-            except BotoServerError as err:
+                response = self.connection.list_topics(NextToken=next_token)
+            except ClientError as err:
                 self.module.fail_json(msg=err.message)
-            topics.extend(response['ListTopicsResponse']['ListTopicsResult']['Topics'])
-            next_token = response['ListTopicsResponse']['ListTopicsResult']['NextToken']
+            topics.extend(response['Topics'])
+            next_token = response.get('NextToken')
             if not next_token:
                 break
         return [t['TopicArn'] for t in topics]
