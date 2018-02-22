@@ -246,7 +246,8 @@ class SnsTopicManager(object):
     def _set_topic_subs(self):
         subscriptions_existing_list = []
         desired_subscriptions = [(sub['protocol'],
-                                  self._canonicalize_endpoint(sub['protocol'], sub['endpoint'])) for sub in
+                                  self._canonicalize_endpoint(sub['protocol'], sub['endpoint']),
+                                  sub.get('raw')) for sub in
                                  self.subscriptions]
 
         if self.subscriptions_existing:
@@ -260,12 +261,19 @@ class SnsTopicManager(object):
                     if not self.check_mode:
                         self.connection.unsubscribe(sub['SubscriptionArn'])
 
-        for (protocol, endpoint) in desired_subscriptions:
+        for (protocol, endpoint, raw) in desired_subscriptions:
             if (protocol, endpoint) not in subscriptions_existing_list:
                 self.changed = True
-                self.subscriptions_added.append((protocol, endpoint))
+                self.subscriptions_added.append((protocol, endpoint, raw))
                 if not self.check_mode:
-                    self.connection.subscribe(self.arn_topic, protocol, endpoint)
+                    subscribe_response = self.connection.subscribe(TopicArn=self.arn_topic, Protocol=protocol, Endpoint=endpoint)
+
+                if raw == True:
+                    self.connection.set_subscription_attributes(
+                        SubscriptionArn = subscribe_response['SubscriptionArn'],
+                        AttributeName = 'RawMessageDelivery',
+                        AttributeValue = 'true'
+                    )
 
     def _delete_subscriptions(self):
         # NOTE: subscriptions in 'PendingConfirmation' timeout in 3 days
