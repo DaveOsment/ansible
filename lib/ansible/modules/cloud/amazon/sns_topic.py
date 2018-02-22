@@ -198,7 +198,7 @@ class SnsTopicManager(object):
         self.changed = True
         self.topic_created = True
         if not self.check_mode:
-            self.connection.create_topic(self.name)
+            self.connection.create_topic(Name=self.name)
             self.arn_topic = self._arn_topic_lookup()
             while not self.arn_topic:
                 time.sleep(3)
