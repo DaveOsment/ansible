@@ -219,16 +219,18 @@ class SnsTopicManager(object):
             self.changed = True
             self.attributes_set.append('policy')
             if not self.check_mode:
-                self.connection.set_topic_attributes(self.arn_topic, 'Policy',
-                                                     json.dumps(self.policy))
+                self.connection.set_topic_attributes(TopicArn=self.arn_topic,
+                                                     AttributeName='Policy',
+                                                     AttributeValue=json.dumps(self.policy))
 
         if self.delivery_policy and ('DeliveryPolicy' not in topic_attributes or
                                      self.delivery_policy != json.loads(topic_attributes['DeliveryPolicy'])):
             self.changed = True
             self.attributes_set.append('delivery_policy')
             if not self.check_mode:
-                self.connection.set_topic_attributes(self.arn_topic, 'DeliveryPolicy',
-                                                     json.dumps(self.delivery_policy))
+                self.connection.set_topic_attributes(TopicArn=self.arn_topic,
+                                                     AttributeName='DeliveryPolicy',
+                                                     AttributeValue=json.dumps(self.delivery_policy))
 
     def _canonicalize_endpoint(self, protocol, endpoint):
         if protocol == 'sms':
