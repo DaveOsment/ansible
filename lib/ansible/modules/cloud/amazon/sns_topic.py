@@ -205,7 +205,7 @@ class SnsTopicManager(object):
                 self.arn_topic = self._arn_topic_lookup()
 
     def _set_topic_attrs(self):
-        topic_attributes = self.connection.get_topic_attributes(self.arn_topic)['GetTopicAttributesResponse']['GetTopicAttributesResult']['Attributes']
+        topic_attributes = self.connection.get_topic_attributes(TopicArn=self.arn_topic)['Attributes']
 
         if self.display_name and self.display_name != topic_attributes['DisplayName']:
             self.changed = True
