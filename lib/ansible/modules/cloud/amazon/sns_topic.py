@@ -262,7 +262,7 @@ class SnsTopicManager(object):
                     self.changed = True
                     self.subscriptions_deleted.append(sub_key)
                     if not self.check_mode:
-                        self.connection.unsubscribe(sub['SubscriptionArn'])
+                        self.connection.unsubscribe(SubscriptionArn=sub['SubscriptionArn'])
 
         for (protocol, endpoint, raw) in desired_subscriptions:
             if (protocol, endpoint) not in subscriptions_existing_list:
@@ -286,7 +286,7 @@ class SnsTopicManager(object):
                 self.subscriptions_deleted.append(sub['SubscriptionArn'])
                 self.changed = True
                 if not self.check_mode:
-                    self.connection.unsubscribe(sub['SubscriptionArn'])
+                    self.connection.unsubscribe(SubscriptionArn=sub['SubscriptionArn'])
 
     def _delete_topic(self):
         self.topic_deleted = True
