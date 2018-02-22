@@ -346,8 +346,8 @@ def main():
     module = AnsibleModule(argument_spec=argument_spec,
                            supports_check_mode=True)
 
-    if not HAS_BOTO:
-        module.fail_json(msg='boto required for this module')
+    if not HAS_BOTOCORE:
+        module.fail_json(msg='Python module "botocore" is missing, please install it')
 
     name = module.params.get('name')
     state = module.params.get('state')
