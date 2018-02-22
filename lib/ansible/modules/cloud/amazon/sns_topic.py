@@ -292,7 +292,7 @@ class SnsTopicManager(object):
         self.topic_deleted = True
         self.changed = True
         if not self.check_mode:
-            self.connection.delete_topic(self.arn_topic)
+            self.connection.delete_topic(TopicArn=self.arn_topic)
 
     def ensure_ok(self):
         self.arn_topic = self._arn_topic_lookup()
