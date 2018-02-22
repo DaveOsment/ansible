@@ -359,9 +359,15 @@ def main():
     purge_subscriptions = module.params.get('purge_subscriptions')
     check_mode = module.check_mode
 
-    region, ec2_url, aws_connect_params = get_aws_connection_info(module)
+    region, ec2_url, aws_connect_params = get_aws_connection_info(module, boto3=True)
     if not region:
         module.fail_json(msg="region must be specified")
+
+    try:
+        client = boto3_conn(module, conn_type='client', resource='sns',
+                            region=region, endpoint=ec2_url, **aws_connect_params)
+    except (botocore.exceptions.ClientError, botocore.exceptions.ValidationError) as e:
+        module.fail_json(msg=str(e))
 
     sns_topic = SnsTopicManager(module,
                                 name,
