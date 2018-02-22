@@ -235,12 +235,11 @@ class SnsTopicManager(object):
         return endpoint
 
     def _get_topic_subs(self):
-        next_token = None
+        next_token = ''
         while True:
-            response = self.connection.get_all_subscriptions_by_topic(self.arn_topic, next_token)
-            self.subscriptions_existing.extend(response['ListSubscriptionsByTopicResponse']
-                                               ['ListSubscriptionsByTopicResult']['Subscriptions'])
-            next_token = response['ListSubscriptionsByTopicResponse']['ListSubscriptionsByTopicResult']['NextToken']
+            response = self.connection.list_subscriptions_by_topic(TopicArn=self.arn_topic, NextToken=next_token)
+            self.subscriptions_existing.extend(response['Subscriptions'])
+            next_token = response.get('NextToken')
             if not next_token:
                 break
 
